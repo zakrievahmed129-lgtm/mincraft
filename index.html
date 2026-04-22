@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voxel Engine — WebGPU</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+    canvas { display: block; width: 100%; height: 100%; }
+    #hud {
+      position: fixed; top: 16px; left: 16px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 13px; color: #b0e0ff; z-index: 10;
+      background: rgba(0,0,0,0.45); padding: 10px 14px;
+      border-radius: 8px; border: 1px solid rgba(120,180,255,0.15);
+      backdrop-filter: blur(8px); pointer-events: none;
+      line-height: 1.6; text-shadow: 0 0 6px rgba(100,180,255,0.3);
+    }
+    #crosshair {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 24px; height: 24px; z-index: 10; pointer-events: none;
+    }
+    #crosshair::before, #crosshair::after {
+      content: ''; position: absolute; background: rgba(255,255,255,0.7);
+      border-radius: 1px;
+    }
+    #crosshair::before { width: 2px; height: 24px; left: 11px; top: 0; }
+    #crosshair::after { width: 24px; height: 2px; top: 11px; left: 0; }
+    #prompt {
+      position: fixed; bottom: 40px; left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Inter', sans-serif; font-size: 15px;
+      color: rgba(255,255,255,0.6); z-index: 10; pointer-events: none;
+      transition: opacity 0.5s;
+    }
+    #error-screen {
+      position: fixed; inset: 0; display: none;
+      background: linear-gradient(135deg, #0a0a1a, #1a0a2e);
+      color: #ff6b6b; font-family: 'Inter', sans-serif;
+      justify-content: center; align-items: center;
+      flex-direction: column; gap: 16px; z-index: 100;
+    }
+    #error-screen h1 { font-size: 28px; color: #ff4757; }
+    #error-screen p { font-size: 16px; color: #aaa; max-width: 500px; text-align: center; }
+  </style>
+</head>
+<body>
+  <canvas id="gpu-canvas"></canvas>
+  <div id="hud">
+    <div>FPS: <span id="fps">0</span></div>
+    <div>Chunks: <span id="chunks">0 / 0</span></div>
+    <div>Triangles: <span id="triangles">0</span></div>
+    <div>Pos: <span id="pos">0, 0, 0</span></div>
+    <div style="margin-top: 8px; opacity: 0.7; font-size: 11px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 4px;">
+      <div>CPU Logic: <span id="prof-cpu">0.00</span>ms</div>
+      <div>Buffer Gen: <span id="prof-buf">0.00</span>ms</div>
+      <div>GPU Disp: <span id="prof-gpu">0.00</span>ms</div>
+    </div>
+  </div>
+  <div id="crosshair"></div>
+  <div id="prompt">Click to capture mouse — WASD to move — Space/Shift for up/down</div>
+  <div id="error-screen">
+    <h1 id="error-heading">⚠ WebGPU Error</h1>
+    <p id="error-message">Starting...</p>
+  </div>
+  <script>
+    const orgError = console.error;
+    console.error = function(...args) {
+      orgError.apply(console, args);
+      const err = document.getElementById('error-screen');
+      const msg = document.getElementById('error-message');
+      if (err && msg) {
+        err.style.display = 'flex';
+        msg.textContent += '\n' + args.join(' ');
+      }
+    };
+    window.addEventListener('error', (e) => console.error(e.message));
+    window.addEventListener('unhandledrejection', (e) => console.error(e.reason));
+  </script>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
