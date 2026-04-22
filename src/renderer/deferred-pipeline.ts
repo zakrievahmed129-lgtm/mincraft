@@ -68,7 +68,7 @@ export function createDeferredResources(gpu: GPUContext): DeferredResources {
   initialLightData[9] = 0.0;
   initialLightData[10] = 0.0;
   initialLightData[11] = 0.0;
-  device.queue.writeBuffer(lightsBuffer, 0, initialLightData);
+  device.queue.writeBuffer(lightsBuffer, 0, initialLightData as any);
 
   const invVPBuffer = device.createBuffer({
     label: 'Inverse ViewProjection Buffer',

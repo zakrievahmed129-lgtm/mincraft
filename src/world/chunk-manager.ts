@@ -235,7 +235,7 @@ export class ChunkManager {
       const rebuildVersion = ++chunk.rebuildVersion;
       const voxelCopy = new Uint8Array(chunk.voxels);
 
-      this.workerPool.rebuildChunk(chunk.cx, chunk.cy, chunk.cz, voxelCopy, paddedVoxelData)
+      this.workerPool.rebuildChunk(chunk.cx, chunk.cy, chunk.cz, voxelCopy, paddedVoxelData as any)
         .then((result) => {
           const current = this.chunks.get(key);
           if (!current || current !== chunk || current.disposed) return;

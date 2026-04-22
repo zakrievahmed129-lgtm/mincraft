@@ -59,14 +59,14 @@ export function createRenderResources(gpu: GPUContext, maxInstances = 4096): Ren
     size: geometry.vertices.byteLength,
     usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
   });
-  device.queue.writeBuffer(vertexBuffer, 0, geometry.vertices);
+  device.queue.writeBuffer(vertexBuffer, 0, geometry.vertices as any);
 
   const indexBuffer = device.createBuffer({
     label: 'Cube IBO',
     size: geometry.indices.byteLength,
     usage: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST,
   });
-  device.queue.writeBuffer(indexBuffer, 0, geometry.indices);
+  device.queue.writeBuffer(indexBuffer, 0, geometry.indices as any);
 
   // Camera uniform: mat4(64) + vec4(16) = 80 bytes
   const cameraBuffer = device.createBuffer({

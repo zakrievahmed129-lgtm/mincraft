@@ -52,7 +52,7 @@ export function createSSAOResources(gpu: GPUContext): SSAOResources {
   });
   device.queue.writeTexture(
     { texture: noiseTexture },
-    noiseData,
+    noiseData as any,
     { bytesPerRow: 4 * 4 },
     [4, 4]
   );

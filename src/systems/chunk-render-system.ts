@@ -185,14 +185,14 @@ export class ChunkRenderSystem implements System {
     this.camData[17] = cam.position[1];
     this.camData[18] = cam.position[2];
     this.camData[19] = performance.now() / 1000.0; // Pass global time in W component
-    device.queue.writeBuffer(this.gbuffer.cameraBuffer, 0, this.camData);
+    device.queue.writeBuffer(this.gbuffer.cameraBuffer, 0, this.camData as any);
 
     // Update chunk async loaders around camera
     this.chunkMgr.update(cam.position);
 
     // Inverse VP for World Position Reconstruction
     invertMat4(this.invVP, cam.viewProjection);
-    device.queue.writeBuffer(this.deferred.invVPBuffer, 0, this.invVP);
+    device.queue.writeBuffer(this.deferred.invVPBuffer, 0, this.invVP as any);
 
     // SSAO Uniforms: Inverse VP, resolution, radius, bias, strength
     this.ssaoData.set(this.invVP, 0); // 0-15
@@ -201,7 +201,7 @@ export class ChunkRenderSystem implements System {
     this.ssaoData[18] = 0.5; // SSAO Radius
     this.ssaoData[19] = 0.05; // SSAO Bias
     this.ssaoData[20] = 1.0; // SSAO Strength
-    device.queue.writeBuffer(this.ssao.ssaoUniformBuffer, 0, this.ssaoData);
+    device.queue.writeBuffer(this.ssao.ssaoUniformBuffer, 0, this.ssaoData as any);
 
     // Update global lights if changed via window.lightParams
     if (window.lightParams) {
@@ -226,7 +226,7 @@ export class ChunkRenderSystem implements System {
       this.lightData[9] = 0;
       this.lightData[10] = 0;
       this.lightData[11] = 0;
-      device.queue.writeBuffer(this.deferred.lightsBuffer, 0, this.lightData);
+      device.queue.writeBuffer(this.deferred.lightsBuffer, 0, this.lightData as any);
     }
 
     const bufStart = performance.now();
@@ -264,7 +264,7 @@ export class ChunkRenderSystem implements System {
     this.stats.totalChunks = this.chunkMgr.chunkCount;
 
     if (visibleChunks.length > 0) {
-      device.queue.writeBuffer(this.gbuffer.chunkUniformBuffer, 0, this.uboData, 0, offsetIdx * (256/4));
+      device.queue.writeBuffer(this.gbuffer.chunkUniformBuffer, 0, this.uboData as any, 0, offsetIdx * (256/4));
     }
     const bufTime = performance.now() - bufStart;
 
@@ -409,13 +409,13 @@ export class ChunkRenderSystem implements System {
           size: pending.vertices.byteLength,
           usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
         });
-        this.gpu.device.queue.writeBuffer(chunk.vertexBuffer, 0, vertexData);
+        this.gpu.device.queue.writeBuffer(chunk.vertexBuffer, 0, vertexData as any);
 
         chunk.indexBuffer = this.gpu.device.createBuffer({
           size: pending.indices.byteLength,
           usage: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST,
         });
-        this.gpu.device.queue.writeBuffer(chunk.indexBuffer, 0, indexData);
+        this.gpu.device.queue.writeBuffer(chunk.indexBuffer, 0, indexData as any);
 
         chunk.indexCount = pending.indexCount;
         chunk.vertexCount = pending.vertexCount;

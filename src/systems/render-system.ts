@@ -55,7 +55,7 @@ export class RenderSystem implements System {
     camData[17] = cam.position[1];
     camData[18] = cam.position[2];
     camData[19] = 0; // pad
-    device.queue.writeBuffer(cameraBuffer, 0, camData);
+    device.queue.writeBuffer(cameraBuffer, 0, camData as any);
 
     // ── Collect visible instances ──
     const transforms  = world.getStore<TransformComponent>('transform');
@@ -75,7 +75,7 @@ export class RenderSystem implements System {
     if (count === 0) return;
 
     // Upload instance matrices
-    device.queue.writeBuffer(instanceBuffer, 0, this.instanceData, 0, count * 16);
+    device.queue.writeBuffer(instanceBuffer, 0, this.instanceData as any, 0, count * 16);
 
     // Update HUD
     const instEl = document.getElementById('instances');

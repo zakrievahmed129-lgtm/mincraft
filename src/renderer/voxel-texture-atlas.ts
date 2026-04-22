@@ -266,7 +266,7 @@ export function createVoxelTextureAtlas(device: GPUDevice): VoxelTextureAtlas {
 
   device.queue.writeTexture(
     { texture },
-    data,
+    data as any,
     { bytesPerRow: ATLAS_WIDTH * 4 },
     { width: ATLAS_WIDTH, height: ATLAS_HEIGHT, depthOrArrayLayers: 1 }
   );
